@@ -4,7 +4,8 @@ import './App.css'
 class App extends Component {
   state = {
     searchTerm: '',
-    repos: []
+    repos: [],
+    favourites: []
   }
 
   handleChange = e => {
@@ -21,15 +22,30 @@ class App extends Component {
     const { searchTerm } = this.state
 
     fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}
-`)
+    `)
       .then(res => res.json())
       .then(data => {
         this.setState({ repos: data.items })
       })
   }
   
+  addToFavs = repo => {
+    const { favourites } = this.state
+    
+    this.setState({
+      favourites: [...favourites, 
+        {  
+          id: repo.id, 
+          html_url: repo.html_url,
+          full_name: repo.full_name, 
+          language: repo.language,
+          isFavourite: true
+        }]
+    })
+  }
+
   render() {
-    const { searchTerm, repos } = this.state
+    const { searchTerm, repos, favourites } = this.state
 
     return (
       <div className="App">
@@ -57,7 +73,17 @@ class App extends Component {
               <a href={repo.html_url}>{repo.full_name}</a>
               <p>{repo.language}</p>
               <p>v1</p>
-              <a href="#" onClick={this.addToFavs}>Add</a>
+              <a href="#" onClick={() => this.addToFavs(repo)}>Add</a>
+            </div>
+          ))}   
+          
+          <h1>Favourites</h1>
+          {favourites.map(repo => (
+            <div key={repo.id}>
+              <a href={repo.html_url}>{repo.full_name}</a>
+              <p>{repo.language}</p>
+              <p>v1</p>
+              <a href="#">Remove</a>
             </div>
           ))}   
         </div>
