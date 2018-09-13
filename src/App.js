@@ -12,7 +12,7 @@ class App extends Component {
 
     this.setState({ searchTerm: e.target.value })
     
-    if (searchTerm === '') {
+    if (searchTerm.split('').length - 1 === 0) {
       this.setState({ repos: [] })
     }
   }
