@@ -25,10 +25,24 @@ class App extends Component {
     `)
       .then(res => res.json())
       .then(data => {
-        this.setState({ repos: data.items })
+        const repos = data.items.map(item => {
+          const { id, full_name, html_url, language } = item
+
+          const obj = {
+            id,
+            full_name,
+            html_url,
+            language,
+            isFavourite: false
+          }
+
+          return obj
+        })
+        
+        this.setState({ repos })
       })
   }
-  
+    
   addToFavs = repo => {
     const { favourites } = this.state
     
@@ -64,16 +78,18 @@ class App extends Component {
         </button>
 
          <div className="category-container">
-          <h5>Name</h5>
-          <h5>Language</h5>
-          <h5>Latest Tag</h5>
+          <div className="labels">
+            <h5>Name</h5>
+            <h5>Language</h5>
+            <h5>Latest Tag</h5>          
+          </div>
 
           {repos.map(repo => (
             <div key={repo.id}>
               <a href={repo.html_url}>{repo.full_name}</a>
               <p>{repo.language}</p>
               <p>v1</p>
-              <a href="#" onClick={() => this.addToFavs(repo)}>Add</a>
+              <button onClick={() => this.addToFavs(repo)}>Add</button>
             </div>
           ))}   
           
@@ -83,7 +99,7 @@ class App extends Component {
               <a href={repo.html_url}>{repo.full_name}</a>
               <p>{repo.language}</p>
               <p>v1</p>
-              <a href="#">Remove</a>
+              <button>Remove</button>
             </div>
           ))}   
         </div>
