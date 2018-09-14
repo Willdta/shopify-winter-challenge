@@ -14,7 +14,7 @@ class App extends Component {
     this.setState({ searchTerm: e.target.value })
     
     if (searchTerm.split('').length - 1 === 0) {
-      this.setState({ repos: [] })
+      this.setState({ repos: [], favourites: [] })
     }
   }
 
@@ -83,45 +83,62 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1>My Github Favorites</h1>
-        <input 
-          type="text"
-          placeholder="search for a repo..."
-          value={searchTerm}
-          onChange={e => this.handleChange(e)}
-          onKeyPress={e => e.key === 'Enter' && this.findRepos()}
-        />
-        <button 
-          type="submit" 
-          onClick={this.findRepos}>
-          Search
-        </button>
+        <nav>
+          <h1>My Github Favorites</h1>
+        </nav>
+        <div className="input-container">
+          <input 
+            type="text"
+            placeholder="search for a repo..."
+            value={searchTerm}
+            onChange={e => this.handleChange(e)}
+            onKeyPress={e => e.key === 'Enter' && this.findRepos()}
+          />
+          <button 
+            type="submit" 
+            onClick={this.findRepos}>
+            Search
+          </button>
+        </div>
 
-        <div className="category-container">
-          <div className="labels">
+        <div className="repo-container">
+          <div className="repo-labels">
             <h5>Name</h5>
             <h5>Language</h5>
             <h5>Latest Tag</h5>          
+            <h5></h5>          
           </div>
 
-          {repos.map(repo => (
-            <div key={repo.id}>
-              <a href={repo.html_url}>{repo.full_name}</a>
-              <p>{repo.language}</p>
-              {repo.latest_tag ? <p>{repo.latest_tag}</p> : <p>-</p>}
-              {repo.isFavourite ? null : <button onClick={() => this.addToFavs(repo)}>Add</button>}
-            </div>
-          ))}   
-            
-          <h1>Favourites</h1>
-          {favourites.map(repo => (
-            <div key={repo.id}>
-              <a href={repo.html_url}>{repo.full_name}</a>
-              <p>{repo.language}</p>
-              <p>{repo.latest_tag}</p>
-              <button onClick={() => this.removeFromFavs(repo)}>Remove</button>
-            </div>
-          ))}   
+          <div className="repo-data">
+            {repos.map(repo => (
+              <div key={repo.id}>
+                <a href={repo.html_url}>{repo.full_name}</a>
+                <p>{repo.language}</p>
+                {repo.latest_tag ? <p>{repo.latest_tag}</p> : <p>-</p>}
+                {repo.isFavourite ? null : <button onClick={() => this.addToFavs(repo)}>Add</button>}
+              </div>
+            ))}   
+          </div>        
+        </div>
+
+        <div className="favourites-container">
+          <div className="favourites-labels">
+            <h5>Name</h5>
+            <h5>Language</h5>
+            <h5>Latest Tag</h5>          
+            <h5></h5>          
+          </div>
+
+          <div className="favourites-data">
+            {favourites.map(repo => (
+              <div key={repo.id}>
+                <a href={repo.html_url}>{repo.full_name}</a>
+                <p>{repo.language}</p>
+                <p>{repo.latest_tag}</p>
+                <button onClick={() => this.removeFromFavs(repo)}>Remove</button>
+              </div>
+            ))}   
+          </div>
         </div>
       </div>
     )
