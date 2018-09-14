@@ -18,48 +18,45 @@ class App extends Component {
     }
   }
 
-  findRepos = () => {
+  findRepos = async () => {
     const { searchTerm } = this.state
 
-    fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}
-    `)
-      .then(res => res.json())
-      .then(data => {
-        const repos = data.items.map(item => {
-          const { id, full_name, html_url, language } = item
+    const response = await fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}`)
+    const data = await response.json()
+    
+    const repos = data.items.map(async item => {
+      const { id, full_name, html_url, language } = item
+      const obj = {
+        id,
+        full_name,
+        html_url, 
+        language,
+        isFavourite: false
+      }
+      
+      const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
+      const tagData = await tagResponse.json()
+      
+      if (tagData[0] && tagData[0].name) {
+        obj.latest_tag = tagData[0].name
+      }
 
-          const obj = {
-            id,
-            full_name,
-            html_url,
-            language,
-            isFavourite: false
-          }
+      return obj
+    })
 
-          return obj
-        })
-        
-        this.setState({ repos })
-      })
+    Promise.all(repos).then(repos => this.setState({ repos }))
   }
     
   addToFavs = repo => {
     const { favourites } = this.state
     
     this.setState({
-      favourites: [...favourites, 
-        {  
-          id: repo.id, 
-          html_url: repo.html_url,
-          full_name: repo.full_name, 
-          language: repo.language,
-          isFavourite: true
-        }]
+      favourites: [...favourites, { ...repo, isFavourite: true }]
     })
   }
 
   render() {
-    const { searchTerm, repos, favourites } = this.state
+    const { searchTerm, repos, favourites } = this.state    
 
     return (
       <div className="App">
@@ -88,7 +85,7 @@ class App extends Component {
             <div key={repo.id}>
               <a href={repo.html_url}>{repo.full_name}</a>
               <p>{repo.language}</p>
-              <p>v1</p>
+              {repo.latest_tag ? <p>{repo.latest_tag}</p> : <p>-</p>}
               <button onClick={() => this.addToFavs(repo)}>Add</button>
             </div>
           ))}   
@@ -98,7 +95,7 @@ class App extends Component {
             <div key={repo.id}>
               <a href={repo.html_url}>{repo.full_name}</a>
               <p>{repo.language}</p>
-              <p>v1</p>
+              <p>{repo.latest_tag}</p>
               <button>Remove</button>
             </div>
           ))}   
