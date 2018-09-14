@@ -48,10 +48,24 @@ class App extends Component {
   }
     
   addToFavs = repo => {
+    const { favourites, repos } = this.state
+    const i = repos.findIndex(repoIndex => repoIndex.id === repo.id)
+
+    this.setState({
+      favourites: [...favourites, { ...repo, isFavourite: true }],
+      repos: [
+        ...repos.slice(0, i),
+        { ...repo, isFavourite: true },
+        ...repos.slice(i + 1)
+      ]
+    })
+  }
+  
+  removeFromFavs = id => {
     const { favourites } = this.state
     
-    this.setState({
-      favourites: [...favourites, { ...repo, isFavourite: true }]
+    this.setState({ 
+      favourites: favourites.filter(repo => repo.id !== id)
     })
   }
 
@@ -74,7 +88,7 @@ class App extends Component {
           Search
         </button>
 
-         <div className="category-container">
+        <div className="category-container">
           <div className="labels">
             <h5>Name</h5>
             <h5>Language</h5>
@@ -86,17 +100,17 @@ class App extends Component {
               <a href={repo.html_url}>{repo.full_name}</a>
               <p>{repo.language}</p>
               {repo.latest_tag ? <p>{repo.latest_tag}</p> : <p>-</p>}
-              <button onClick={() => this.addToFavs(repo)}>Add</button>
+              {repo.isFavourite ? null : <button onClick={() => this.addToFavs(repo)}>Add</button>}
             </div>
           ))}   
-          
+            
           <h1>Favourites</h1>
           {favourites.map(repo => (
             <div key={repo.id}>
               <a href={repo.html_url}>{repo.full_name}</a>
               <p>{repo.language}</p>
               <p>{repo.latest_tag}</p>
-              <button>Remove</button>
+              <button onClick={() => this.removeFromFavs(repo.id)}>Remove</button>
             </div>
           ))}   
         </div>
