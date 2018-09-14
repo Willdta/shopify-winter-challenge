@@ -47,12 +47,12 @@ class App extends Component {
     Promise.all(repos).then(repos => this.setState({ repos }))
   }
     
-  addToFavs = repo => {
+  addToFavs = async repo => {
     const { favourites, repos } = this.state
-    const i = repos.findIndex(repoIndex => repoIndex.id === repo.id)
+    const i = await repos.findIndex(repoIndex => repoIndex.id === repo.id)
 
     this.setState({
-      favourites: [...favourites, { ...repo, isFavourite: true }],
+      favourites: [...favourites, { ...repo }],
       repos: [
         ...repos.slice(0, i),
         { ...repo, isFavourite: true },
@@ -61,11 +61,20 @@ class App extends Component {
     })
   }
   
-  removeFromFavs = id => {
-    const { favourites } = this.state
-    
+  removeFromFavs = async repo => {
+    const { favourites, repos } = this.state
+    const { id } = repo
+
+    const findRepo = await favourites.find(repoIndex => repoIndex.id === repo.id)
+    const i = await repos.findIndex(repoIndex => repoIndex.id === repo.id) 
+
     this.setState({ 
-      favourites: favourites.filter(repo => repo.id !== id)
+      favourites: favourites.filter(repo => repo.id !== id),
+      repos: [
+        ...repos.slice(0, i),
+        { ...findRepo, isFavourite: false },
+        ...repos.slice(i + 1)
+      ]
     })
   }
 
@@ -110,7 +119,7 @@ class App extends Component {
               <a href={repo.html_url}>{repo.full_name}</a>
               <p>{repo.language}</p>
               <p>{repo.latest_tag}</p>
-              <button onClick={() => this.removeFromFavs(repo.id)}>Remove</button>
+              <button onClick={() => this.removeFromFavs(repo)}>Remove</button>
             </div>
           ))}   
         </div>
