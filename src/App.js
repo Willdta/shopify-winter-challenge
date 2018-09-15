@@ -5,9 +5,7 @@ import './App.css'
 
 class App extends Component {
   state = {
-    searchTerm: '',
-    repos: [],
-    favourites: []
+    searchTerm: ''
   }
 
   handleChange = e => {
@@ -17,7 +15,6 @@ class App extends Component {
     
     if (searchTerm.split('').length - 1 === 0) {
       this.props.resetSearch()
-      // this.setState({ repos: [], favourites: [] })
     }
   }
 
@@ -28,30 +25,6 @@ class App extends Component {
       e.preventDefault()
     } else { 
       this.props.fetchRepos(searchTerm)
-      // const response = await fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}`)
-      // const data = await response.json()
-      
-      // const repos = data.items.map(async item => {
-      //   const { id, full_name, html_url, language } = item
-      //   const obj = {
-      //     id,
-      //     full_name,
-      //     html_url, 
-      //     language,
-      //     isFavourite: false
-      //   }
-        
-      //   const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
-      //   const tagData = await tagResponse.json()
-        
-      //   if (tagData[0] && tagData[0].name) {
-      //     obj.latest_tag = tagData[0].name
-      //   }
-  
-      //   return obj
-      // })
-  
-      // Promise.all(repos).then(repos => this.setState({ repos }))
     }
   }
     
@@ -60,15 +33,6 @@ class App extends Component {
     const i = repos.findIndex(repoIndex => repoIndex.id === repo.id)
 
     this.props.addToFavs(repo, i)
-
-    // this.setState({
-    //   favourites: [...favourites, { ...repo }],
-    //   repos: [
-    //     ...repos.slice(0, i),
-    //     { ...repo, isFavourite: true },
-    //     ...repos.slice(i + 1)
-    //   ]
-    // })
   }
   
   removeFromFavs = repo => {
@@ -79,15 +43,6 @@ class App extends Component {
     const i = repos.findIndex(repoIndex => repoIndex.id === repo.id) 
 
     this.props.removeFromFavs(foundRepo, id, i)
-
-    // this.setState({ 
-    //   favourites: favourites.filter(repo => repo.id !== id),
-    //   repos: [
-    //     ...repos.slice(0, i),
-    //     { ...findRepo, isFavourite: false },
-    //     ...repos.slice(i + 1)
-    //   ]
-    // })
   }
 
   render() {
