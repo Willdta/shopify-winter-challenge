@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { fetchRepos } from './actions/reposActions'
+import { fetchRepos, addToFavs } from './actions/reposActions'
 import { connect } from 'react-redux'
 import './App.css'
 
@@ -20,7 +20,7 @@ class App extends Component {
     }
   }
 
-  findRepos = async e => {
+  findRepos = e => {
     const { searchTerm } = this.state
 
     if (searchTerm === '') {
@@ -54,18 +54,20 @@ class App extends Component {
     }
   }
     
-  addToFavs = async repo => {
-    const { favourites, repos } = this.state
-    const i = await repos.findIndex(repoIndex => repoIndex.id === repo.id)
+  addToFavs = repo => {
+    const {repos } = this.props
+    const i = repos.findIndex(repoIndex => repoIndex.id === repo.id)
 
-    this.setState({
-      favourites: [...favourites, { ...repo }],
-      repos: [
-        ...repos.slice(0, i),
-        { ...repo, isFavourite: true },
-        ...repos.slice(i + 1)
-      ]
-    })
+    this.props.addToFavs(repo, i)
+
+    // this.setState({
+    //   favourites: [...favourites, { ...repo }],
+    //   repos: [
+    //     ...repos.slice(0, i),
+    //     { ...repo, isFavourite: true },
+    //     ...repos.slice(i + 1)
+    //   ]
+    // })
   }
   
   removeFromFavs = async repo => {
@@ -86,8 +88,8 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, favourites } = this.state    
-    const { repos } = this.props
+    const { searchTerm } = this.state    
+    const { repos, favourites } = this.props
 
     return (
       <div className="App">
@@ -151,7 +153,8 @@ class App extends Component {
 }
 
 const mapStateToProps = ({ repos }) => ({
-  repos: repos.repos
+  repos: repos.repos,
+  favourites: repos.favourites
 })
 
-export default connect(mapStateToProps, { fetchRepos })(App)
+export default connect(mapStateToProps, { fetchRepos, addToFavs })(App)
