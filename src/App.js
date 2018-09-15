@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { fetchRepos, addToFavs, resetSearch } from './actions/reposActions'
+import { fetchRepos, addToFavs, removeFromFavs, resetSearch } from './actions/reposActions'
 import { connect } from 'react-redux'
 import './App.css'
 
@@ -71,21 +71,23 @@ class App extends Component {
     // })
   }
   
-  removeFromFavs = async repo => {
-    const { favourites, repos } = this.state
+  removeFromFavs = repo => {
+    const { favourites, repos } = this.props
     const { id } = repo
 
-    const findRepo = await favourites.find(repoIndex => repoIndex.id === repo.id)
-    const i = await repos.findIndex(repoIndex => repoIndex.id === repo.id) 
+    const foundRepo = favourites.find(repoIndex => repoIndex.id === repo.id)
+    const i = repos.findIndex(repoIndex => repoIndex.id === repo.id) 
 
-    this.setState({ 
-      favourites: favourites.filter(repo => repo.id !== id),
-      repos: [
-        ...repos.slice(0, i),
-        { ...findRepo, isFavourite: false },
-        ...repos.slice(i + 1)
-      ]
-    })
+    this.props.removeFromFavs(foundRepo, id, i)
+
+    // this.setState({ 
+    //   favourites: favourites.filter(repo => repo.id !== id),
+    //   repos: [
+    //     ...repos.slice(0, i),
+    //     { ...findRepo, isFavourite: false },
+    //     ...repos.slice(i + 1)
+    //   ]
+    // })
   }
 
   render() {
@@ -158,4 +160,4 @@ const mapStateToProps = ({ repos }) => ({
   favourites: repos.favourites
 })
 
-export default connect(mapStateToProps, { fetchRepos, addToFavs, resetSearch })(App)
+export default connect(mapStateToProps, { fetchRepos, addToFavs, removeFromFavs, resetSearch })(App)

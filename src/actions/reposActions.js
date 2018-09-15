@@ -1,4 +1,4 @@
-import { FETCH_REPOS, ADD_TO_FAVS, RESET_SEARCH } from './types'
+import { FETCH_REPOS, ADD_TO_FAVS, REMOVE_FROM_FAVS, RESET_SEARCH } from './types'
 
 export const fetchRepos = searchTerm => async dispatch => {
   const response = await fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}`)
@@ -41,6 +41,13 @@ export const addToFavs = (repo, i) => dispatch => (
   dispatch({
     type: ADD_TO_FAVS,
     payload: { repo, i }
+  })
+)
+
+export const removeFromFavs = (foundRepo, id, i) => dispatch => (
+  dispatch({
+    type: REMOVE_FROM_FAVS,
+    payload: { foundRepo, id, i }
   })
 )
 
