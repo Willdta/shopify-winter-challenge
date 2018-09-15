@@ -18,33 +18,37 @@ class App extends Component {
     }
   }
 
-  findRepos = async () => {
+  findRepos = async e => {
     const { searchTerm } = this.state
 
-    const response = await fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}`)
-    const data = await response.json()
-    
-    const repos = data.items.map(async item => {
-      const { id, full_name, html_url, language } = item
-      const obj = {
-        id,
-        full_name,
-        html_url, 
-        language,
-        isFavourite: false
-      }
+    if (searchTerm === '') {
+      e.preventDefault()
+    } else { 
+      const response = await fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}`)
+      const data = await response.json()
       
-      const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
-      const tagData = await tagResponse.json()
-      
-      if (tagData[0] && tagData[0].name) {
-        obj.latest_tag = tagData[0].name
-      }
-
-      return obj
-    })
-
-    Promise.all(repos).then(repos => this.setState({ repos }))
+      const repos = data.items.map(async item => {
+        const { id, full_name, html_url, language } = item
+        const obj = {
+          id,
+          full_name,
+          html_url, 
+          language,
+          isFavourite: false
+        }
+        
+        const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
+        const tagData = await tagResponse.json()
+        
+        if (tagData[0] && tagData[0].name) {
+          obj.latest_tag = tagData[0].name
+        }
+  
+        return obj
+      })
+  
+      Promise.all(repos).then(repos => this.setState({ repos }))
+    }
   }
     
   addToFavs = async repo => {
@@ -92,7 +96,7 @@ class App extends Component {
             placeholder="search for a repo..."
             value={searchTerm}
             onChange={e => this.handleChange(e)}
-            onKeyPress={e => e.key === 'Enter' && this.findRepos()}
+            onKeyPress={e => e.key === 'Enter' && this.findRepos(e)}
           />
           <button 
             type="submit" 
@@ -103,41 +107,50 @@ class App extends Component {
 
         <div className="repo-container">
           <div className="repo-labels">
-            <h5>Name</h5>
-            <h5>Language</h5>
-            <h5>Latest Tag</h5>          
-            <h5></h5>          
+            <h5 className="repo-font">Name</h5>
+            <h5 className="repo-font">Language</h5>
+            <h5 className="repo-font">Latest Tag</h5>          
+            <h5 className="repo-font placeholder">Placeholder</h5>          
           </div>
 
-          <div className="repo-data">
             {repos.map(repo => (
-              <div key={repo.id}>
-                <a href={repo.html_url}>{repo.full_name}</a>
-                <p>{repo.language}</p>
-                {repo.latest_tag ? <p>{repo.latest_tag}</p> : <p>-</p>}
-                {repo.isFavourite ? null : <button onClick={() => this.addToFavs(repo)}>Add</button>}
+              <div key={repo.id} className="repo-data">
+              {/* <div className="repo-data"> */}
+                <a className="data-info font" href={repo.html_url}>{repo.full_name}</a>
+                {/* <a className="data-info font">full_name</a> */}
+                {/* <p className="data-info font">language</p> */}
+                <p className="data-info font">{repo.language}</p>
+                {repo.latest_tag ? <p className="data-info font">{repo.latest_tag}</p> : <p className="data-info font">-</p>}
+               {/* <p className="data-info font">latest_tag</p> */}
+                {repo.isFavourite ? <p className="placeholder">add</p> : <p className="data-info font" onClick={() => this.addToFavs(repo)}>Add</p>}
+                {/* <p className="data-info font">Add</p> */}
               </div>
             ))}   
           </div>        
-        </div>
 
         <div className="favourites-container">
           <div className="favourites-labels">
-            <h5>Name</h5>
-            <h5>Language</h5>
-            <h5>Latest Tag</h5>          
-            <h5></h5>          
+            <h5 className="repo-font">Name</h5>
+            <h5 className="repo-font">Language</h5>
+            <h5 className="repo-font">Latest Tag</h5>          
+            <h5 className="repo-font placeholder">Placeholder</h5>          
           </div>
 
           <div className="favourites-data">
             {favourites.map(repo => (
-              <div key={repo.id}>
-                <a href={repo.html_url}>{repo.full_name}</a>
-                <p>{repo.language}</p>
-                <p>{repo.latest_tag}</p>
-                <button onClick={() => this.removeFromFavs(repo)}>Remove</button>
+              <div key={repo.id} className="repo-data">
+              {/* // <div className="repo-data"> */}
+                <a className="data-info font" href={repo.html_url}>{repo.full_name}</a>
+                {/* <a className="data-info font">full_name</a> */}
+                <p className="data-info font">{repo.language}</p>
+                {/* <p className="data-info font">language</p> */}
+                {repo.latest_tag ? <p className="data-info font">{repo.latest_tag}</p> : <p className="data-info font">-</p>}
+                {/* <p className="data-info font">{repo.latest_tag}</p> */}
+                {/* <p className="data-info font">latest_tag</p> */}
+                <p className="data-info font" onClick={() => this.removeFromFavs(repo)}>Remove</p>
+                {/* <p className="data-info font">Remove</p> */}
               </div>
-            ))}   
+            ))}
           </div>
         </div>
       </div>
