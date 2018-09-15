@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { fetchRepos } from './actions/reposActions'
+import { connect } from 'react-redux'
 import './App.css'
 
 class App extends Component {
@@ -24,30 +26,31 @@ class App extends Component {
     if (searchTerm === '') {
       e.preventDefault()
     } else { 
-      const response = await fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}`)
-      const data = await response.json()
+      this.props.fetchRepos(searchTerm)
+      // const response = await fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}`)
+      // const data = await response.json()
       
-      const repos = data.items.map(async item => {
-        const { id, full_name, html_url, language } = item
-        const obj = {
-          id,
-          full_name,
-          html_url, 
-          language,
-          isFavourite: false
-        }
+      // const repos = data.items.map(async item => {
+      //   const { id, full_name, html_url, language } = item
+      //   const obj = {
+      //     id,
+      //     full_name,
+      //     html_url, 
+      //     language,
+      //     isFavourite: false
+      //   }
         
-        const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
-        const tagData = await tagResponse.json()
+      //   const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
+      //   const tagData = await tagResponse.json()
         
-        if (tagData[0] && tagData[0].name) {
-          obj.latest_tag = tagData[0].name
-        }
+      //   if (tagData[0] && tagData[0].name) {
+      //     obj.latest_tag = tagData[0].name
+      //   }
   
-        return obj
-      })
+      //   return obj
+      // })
   
-      Promise.all(repos).then(repos => this.setState({ repos }))
+      // Promise.all(repos).then(repos => this.setState({ repos }))
     }
   }
     
@@ -83,7 +86,8 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, repos, favourites } = this.state    
+    const { searchTerm, favourites } = this.state    
+    const { repos } = this.props
 
     return (
       <div className="App">
@@ -146,4 +150,8 @@ class App extends Component {
   }
 }
 
-export default App
+const mapStateToProps = ({ repos }) => ({
+  repos: repos.repos
+})
+
+export default connect(mapStateToProps, { fetchRepos })(App)
