@@ -1,4 +1,5 @@
 import React from 'react'
+import '../styles/api-data.css'
 
 const Repo = ({ repo , addToFavs }) => (
   <div key={repo.id} className="repo-data">

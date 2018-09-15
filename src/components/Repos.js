@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { addToFavs } from '../actions/reposActions'
 import Repo from './Repo'
+import '../styles/labels.css'
 
 class Repos extends Component {
   addToFavs = repo => {

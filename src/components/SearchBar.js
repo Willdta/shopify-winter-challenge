@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fetchRepos, resetSearch } from '../actions/reposActions'
+import '../styles/searchbar.css'
 
 class SearchBar extends Component {
   state = {

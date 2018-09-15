@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { removeFromFavs } from '../actions/reposActions'
 import Favourite from './Favourite'
+import '../styles/labels.css'
 
 class Favourites extends Component {
   removeFromFavs = repo => {
@@ -39,6 +40,5 @@ const mapStateToProps = ({ repos }) => ({
   repos: repos.repos,
   favourites: repos.favourites
 })
-
 
 export default connect(mapStateToProps, { removeFromFavs })(Favourites)
