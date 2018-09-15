@@ -28,7 +28,7 @@ class Favourites extends Component {
         
         <div className="favourites-data">
           {favourites.map(repo => (
-            <Favourite repo={repo} removeFromFavs={() => this.removeFromFavs(repo)} />
+            <Favourite repo={repo} key={repo.id} removeFromFavs={() => this.removeFromFavs(repo)} />
           ))}
         </div>
       </section>

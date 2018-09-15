@@ -33,3 +33,7 @@
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
 }
+
+.invalid {
+  border: 0.5px solid red;
+}

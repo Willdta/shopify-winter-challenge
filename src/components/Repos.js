@@ -24,7 +24,7 @@ class Repos extends Component {
         </div>
 
         {repos.map(repo => (
-          <Repo repo={repo} addToFavs={() => this.addToFavs(repo)} />
+          <Repo repo={repo} key={repo.id} addToFavs={() => this.addToFavs(repo)} />
         ))}
       </section>
     )
