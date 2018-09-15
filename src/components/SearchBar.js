@@ -6,7 +6,7 @@ import '../styles/searchbar.css'
 class SearchBar extends Component {
   state = {
     searchTerm: '',
-    invalid: ''
+    error: null
   }
 
    handleChange = e => {
@@ -24,32 +24,35 @@ class SearchBar extends Component {
 
     if (!searchTerm) {
       e.preventDefault()
-      console.log('nah');
       
-      // this.setState({
-      //   invalid: 'invalid'
-      // })
+      this.setState({
+        error: true
+      })
     } else { 
+      this.setState({
+        error: false
+      })
+      
       this.props.fetchRepos(searchTerm)
     }
   }
 
   render() {
-    const { searchTerm, invalid } = this.state
+    const { searchTerm, error } = this.state
 
     return (
       <div className="input-container">
+        { error && <p className="invalid">Please Enter Something</p> }
         <input 
           type="text"
           placeholder="search for a repo..."
           value={searchTerm}
           onChange={e => this.handleChange(e)}
           onKeyPress={e => e.key === 'Enter' && this.findRepos(e)}
-          className={invalid}
         />
         <button 
           type="submit" 
-          onClick={e=> this.findRepos(e)}>
+          onClick={e => this.findRepos(e)}>
           Search
         </button>
       </div>
