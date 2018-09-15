@@ -15,11 +15,17 @@ class Repos extends Component {
     const { repos } = this.props
 
     return (
-      <div>
+      <section>
+        <div className="repo-labels labels">
+          <h5 className="label-font">Name</h5>
+          <h5 className="label-font">Language</h5>
+          <h5 className="label-font">Latest Tag</h5>          
+        </div>
+
         {repos.map(repo => (
           <Repo repo={repo} addToFavs={() => this.addToFavs(repo)} />
         ))}
-      </div>
+      </section>
     )
   }
 }

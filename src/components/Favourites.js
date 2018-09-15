@@ -18,11 +18,19 @@ class Favourites extends Component {
     const { favourites } = this.props
     
     return (
-      <div className="favourites-data">
-        {favourites.map(repo => (
-          <Favourite repo={repo} removeFromFavs={() => this.removeFromFavs(repo)} />
-        ))}
-      </div>
+      <section className="favourites-container">
+        <div className="favourites-labels labels">
+          <h5 className="label-font">Name</h5>
+          <h5 className="label-font">Language</h5>
+          <h5 className="label-font">Latest Tag</h5>          
+        </div>
+        
+        <div className="favourites-data">
+          {favourites.map(repo => (
+            <Favourite repo={repo} removeFromFavs={() => this.removeFromFavs(repo)} />
+          ))}
+        </div>
+      </section>
     )
   }
 }
