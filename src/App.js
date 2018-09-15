@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { fetchRepos, addToFavs } from './actions/reposActions'
+import { fetchRepos, addToFavs, resetSearch } from './actions/reposActions'
 import { connect } from 'react-redux'
 import './App.css'
 
@@ -16,7 +16,8 @@ class App extends Component {
     this.setState({ searchTerm: e.target.value })
     
     if (searchTerm.split('').length - 1 === 0) {
-      this.setState({ repos: [], favourites: [] })
+      this.props.resetSearch()
+      // this.setState({ repos: [], favourites: [] })
     }
   }
 
@@ -55,7 +56,7 @@ class App extends Component {
   }
     
   addToFavs = repo => {
-    const {repos } = this.props
+    const { repos } = this.props
     const i = repos.findIndex(repoIndex => repoIndex.id === repo.id)
 
     this.props.addToFavs(repo, i)
@@ -157,4 +158,4 @@ const mapStateToProps = ({ repos }) => ({
   favourites: repos.favourites
 })
 
-export default connect(mapStateToProps, { fetchRepos, addToFavs })(App)
+export default connect(mapStateToProps, { fetchRepos, addToFavs, resetSearch })(App)

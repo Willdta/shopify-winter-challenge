@@ -1,4 +1,4 @@
-import { FETCH_REPOS, ADD_TO_FAVS } from '../actions/types'
+import { FETCH_REPOS, ADD_TO_FAVS, RESET_SEARCH } from '../actions/types'
 
 const initialState = {
   repos: [],
@@ -24,6 +24,13 @@ export default (state = initialState, action) =>  {
         favourites: [...state.favourites, { ...action.payload.repo }]
       }
       
+    case RESET_SEARCH:
+      return {
+        ...state,
+        repos: [],
+        favourites: []
+      }
+
     default:
       return state
   } 
