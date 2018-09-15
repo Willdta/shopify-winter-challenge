@@ -90,6 +90,7 @@ class App extends Component {
         <nav>
           <h1>My Github Favorites</h1>
         </nav>
+        
         <div className="input-container">
           <input 
             type="text"
@@ -105,54 +106,52 @@ class App extends Component {
           </button>
         </div>
 
-        <div className="repo-container">
-          <div className="repo-labels">
-            <h5 className="repo-font">Name</h5>
-            <h5 className="repo-font">Language</h5>
-            <h5 className="repo-font">Latest Tag</h5>          
-            <h5 className="repo-font placeholder">Placeholder</h5>          
+        <section>
+          <div className="repo-labels labels">
+            <h5 className="label-font">Name</h5>
+            <h5 className="label-font">Language</h5>
+            <h5 className="label-font">Latest Tag</h5>          
           </div>
 
-            {repos.map(repo => (
-              <div key={repo.id} className="repo-data">
-              {/* <div className="repo-data"> */}
-                <a className="data-info font" href={repo.html_url}>{repo.full_name}</a>
-                {/* <a className="data-info font">full_name</a> */}
-                {/* <p className="data-info font">language</p> */}
-                <p className="data-info font">{repo.language}</p>
-                {repo.latest_tag ? <p className="data-info font">{repo.latest_tag}</p> : <p className="data-info font">-</p>}
-               {/* <p className="data-info font">latest_tag</p> */}
-                {repo.isFavourite ? <p className="placeholder">add</p> : <p className="data-info font" onClick={() => this.addToFavs(repo)}>Add</p>}
-                {/* <p className="data-info font">Add</p> */}
+            {/* {repos.map(repo => ( */}
+              {/* <div key={repo.id} className="repo-data"> */}
+              <div className="repo-data">
+                {/* <a className="data-font" href={repo.html_url}>{repo.full_name}</a> */}
+                <a className="data-font">full_name</a>
+                <p className="data-font">language</p>
+                {/* <p className="data-font">{repo.language}</p> */}
+                {/* {repo.latest_tag ? <p className="data-font">{repo.latest_tag}</p> : <p className="data-font">-</p>} */}
+               <p className="data-font">latest_tag</p>
+                {/* {repo.isFavourite ? <p className="placeholder">add</p> : <p className="data-font" onClick={() => this.addToFavs(repo)}>Add</p>} */}
+                <p className="data-font">Add</p>
               </div>
-            ))}   
-          </div>        
+            {/* ))}    */}
+        </section>        
 
-        <div className="favourites-container">
-          <div className="favourites-labels">
-            <h5 className="repo-font">Name</h5>
-            <h5 className="repo-font">Language</h5>
-            <h5 className="repo-font">Latest Tag</h5>          
-            <h5 className="repo-font placeholder">Placeholder</h5>          
+        <section className="favourites-container">
+          <div className="favourites-labels labels">
+            <h5 className="label-font">Name</h5>
+            <h5 className="label-font">Language</h5>
+            <h5 className="label-font">Latest Tag</h5>          
           </div>
 
           <div className="favourites-data">
             {favourites.map(repo => (
               <div key={repo.id} className="repo-data">
               {/* // <div className="repo-data"> */}
-                <a className="data-info font" href={repo.html_url}>{repo.full_name}</a>
+                <a className="data-font" href={repo.html_url}>{repo.full_name}</a>
                 {/* <a className="data-info font">full_name</a> */}
-                <p className="data-info font">{repo.language}</p>
+                <p className="data-font">{repo.language}</p>
                 {/* <p className="data-info font">language</p> */}
-                {repo.latest_tag ? <p className="data-info font">{repo.latest_tag}</p> : <p className="data-info font">-</p>}
+                {repo.latest_tag ? <p className="data-font">{repo.latest_tag}</p> : <p className="data-font">-</p>}
                 {/* <p className="data-info font">{repo.latest_tag}</p> */}
                 {/* <p className="data-info font">latest_tag</p> */}
-                <p className="data-info font" onClick={() => this.removeFromFavs(repo)}>Remove</p>
+                <p className="data-font" onClick={() => this.removeFromFavs(repo)}>Remove</p>
                 {/* <p className="data-info font">Remove</p> */}
               </div>
             ))}
           </div>
-        </div>
+        </section>
       </div>
     )
   }
