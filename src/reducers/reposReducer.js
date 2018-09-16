@@ -1,4 +1,4 @@
-import { FETCH_REPOS, ADD_TO_FAVS, REMOVE_FROM_FAVS, RESET_SEARCH } from '../actions/types'
+import { FETCH_REPOS, ADD_TO_FAVS, REMOVE_FROM_FAVS,REMOVE_FAV_ONLY, RESET_SEARCH } from '../actions/types'
 
 const initialState = {
   repos: [],
@@ -34,12 +34,18 @@ export default (state = initialState, action) =>  {
           ...state.repos.slice(action.payload.i + 1)
         ]
       }
+      
+    case REMOVE_FAV_ONLY: 
+      return {
+        ...state,
+        favourites: state.favourites.filter(repo => repo.id !== action.payload)
+      }
 
     case RESET_SEARCH:
       return {
         ...state,
         repos: [],
-        favourites: []
+        // favourites: []
       }
 
     default:

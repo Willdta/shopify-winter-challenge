@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { removeFromFavs } from '../actions/reposActions'
+import { removeFromFavs, removeFavOnly } from '../actions/reposActions'
 import Favourite from './Favourite'
 import '../styles/labels.css'
 
@@ -12,7 +12,13 @@ class Favourites extends Component {
     const foundRepo = favourites.find(repoIndex => repoIndex.id === repo.id)
     const i = repos.findIndex(repoIndex => repoIndex.id === repo.id) 
 
-    this.props.removeFromFavs(foundRepo, id, i)
+    const validRepo = repos.find(repoIndex => repoIndex.id === foundRepo.id) 
+
+    if (validRepo) {
+      this.props.removeFromFavs(foundRepo, id, i)
+    } else {
+      this.props.removeFavOnly(id)
+    }
   }
 
   render() {
@@ -41,4 +47,4 @@ const mapStateToProps = ({ repos }) => ({
   favourites: repos.favourites
 })
 
-export default connect(mapStateToProps, { removeFromFavs })(Favourites)
+export default connect(mapStateToProps, { removeFromFavs, removeFavOnly })(Favourites)
