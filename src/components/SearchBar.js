@@ -22,9 +22,9 @@ class SearchBar extends Component {
   findRepos = e => {
     const { searchTerm } = this.state
 
+    e.preventDefault()
+
     if (!searchTerm) {
-      e.preventDefault()
-      
       this.setState({
         error: true
       })
@@ -41,21 +41,19 @@ class SearchBar extends Component {
     const { searchTerm, error } = this.state
 
     return (
-      <div className="input-container">
+      <form className="input-container" onSubmit={e => this.findRepos(e)}>
         { error && <p className="invalid">Please Enter Something</p> }
         <input 
           type="text"
           placeholder="search for a repo..."
           value={searchTerm}
           onChange={e => this.handleChange(e)}
-          onKeyPress={e => e.key === 'Enter' && this.findRepos(e)}
         />
         <button 
-          type="submit" 
-          onClick={e => this.findRepos(e)}>
+          type="submit"> 
           Search
         </button>
-      </div>
+      </form>
     )
   }
 }
