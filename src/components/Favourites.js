@@ -6,12 +6,11 @@ import '../styles/labels.css'
 
 class Favourites extends Component {
   removeFromFavs = repo => {
-   const { favourites, repos } = this.props
+    const { favourites, repos } = this.props
     const { id } = repo
 
     const foundRepo = favourites.find(repoIndex => repoIndex.id === repo.id)
     const i = repos.findIndex(repoIndex => repoIndex.id === repo.id) 
-
     const validRepo = repos.find(repoIndex => repoIndex.id === foundRepo.id) 
 
     if (validRepo) {

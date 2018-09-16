@@ -44,8 +44,7 @@ export default (state = initialState, action) =>  {
     case RESET_SEARCH:
       return {
         ...state,
-        repos: [],
-        // favourites: []
+        repos: []
       }
 
     default:

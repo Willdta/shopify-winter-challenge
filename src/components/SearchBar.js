@@ -9,12 +9,12 @@ class SearchBar extends Component {
     error: null
   }
 
-   handleChange = e => {
-    const { searchTerm } = this.state
+  handleChange = e => {
+    const searchTerm = e.target.value
 
-    this.setState({ searchTerm: e.target.value })
-    
-    if (searchTerm.split('').length - 1 === 0) {
+    this.setState({ searchTerm })
+
+    if (searchTerm.trim() === '') {
       this.props.resetSearch()
     }
   }
