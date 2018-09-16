@@ -11,7 +11,7 @@ class SearchBar extends Component {
 
   handleChange = e => {
     const searchTerm = e.target.value
-
+    
     this.setState({ searchTerm })
 
     if (searchTerm.trim() === '') {
