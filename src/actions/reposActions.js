@@ -4,43 +4,36 @@ export const fetchRepos = searchTerm => async dispatch => {
   try {
     const initialResponse = await fetch(`https://api.github.com/search/repositories?q=${searchTerm}&per_page=10&access_token=${process.env.REACT_APP_TOKEN}`)
     const initialData = await initialResponse.json()
-    
-    const repos = initialData.items.map(async item => {
-      try {
-        const {
-          id,
-          full_name,
-          html_url,
-          language
-        } = item  
-    
-        const repoData = {
-          id,
-          full_name,
-          html_url,
-          language,
-          isFavourite: false
-        }
-        
-        const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)        
-        const tagData = await tagResponse.json()
-    
-        if (tagData[0] && tagData[0].name) {
-          repoData.latest_tag = tagData[0].name
-        }
-    
-        return repoData
-      } catch (error) {
-        return error
+
+    const repos = await Promise.all(initialData.items.map(async item => {
+      const {
+        id,
+        full_name,
+        html_url,
+        language
+      } = item
+
+      const repoData = {
+        id,
+        full_name,
+        html_url,
+        language,
+        isFavourite: false
       }
-    })
-    
-    const finalResponse = await Promise.all(repos)
-    const finalData = await finalResponse
+
+      const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
+      const tagData = await tagResponse.json()
+
+      if (tagData[0] && tagData[0].name) {
+        repoData.latest_tag = tagData[0].name
+      }
+
+      return repoData
+    }))
 
     dispatch({
       type: FETCH_REPOS,
-      payload: finalData
+      payload: repos
     })
   } catch (error) {
     return error
