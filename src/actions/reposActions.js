@@ -6,31 +6,35 @@ export const fetchRepos = searchTerm => async dispatch => {
     const initialData = await initialResponse.json()
 
     const repos = await Promise.all(initialData.items.map(async item => {
-      const {
-        id,
-        full_name,
-        html_url,
-        language
-      } = item
-
-      const repoData = {
-        id,
-        full_name,
-        html_url,
-        language,
-        isFavourite: false
+      try {
+        const {
+          id,
+          full_name,
+          html_url,
+          language
+        } = item
+  
+        const repoData = {
+          id,
+          full_name,
+          html_url,
+          language,
+          isFavourite: false
+        }
+  
+        const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
+        const tagData = await tagResponse.json()
+  
+        if (tagData[0] && tagData[0].name) {
+          repoData.latest_tag = tagData[0].name
+        }
+  
+        return repoData
+      } catch (error) {
+        return error
       }
-
-      const tagResponse = await fetch(`https://api.github.com/repos/${full_name}/tags`)
-      const tagData = await tagResponse.json()
-
-      if (tagData[0] && tagData[0].name) {
-        repoData.latest_tag = tagData[0].name
-      }
-
-      return repoData
     }))
-
+        
     dispatch({
       type: FETCH_REPOS,
       payload: repos
